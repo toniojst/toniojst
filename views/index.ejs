@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seznam pacientov</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* Dodajanje vertikalne poravnave celic v tabeli */
+    .table td, .table th {
+      vertical-align: middle;
+    }
+
+    /* Ozadje za glavo strani */
+    body {
+      background-color: #f8f9fa;
+    }
+
+    /* Stilizacija tabele brez shadow in paddinga */
+    .table {
+      background-color: #ffffff;
+      border-radius: 8px;
+      padding: 0;  /* Ni paddinga */
+    }
+
+    .table th, .table td {
+      border: 1px solid #ddd;
+      padding: 12px; /* Dodan padding za boljši izgled */
+    }
+
+    .table-hover tbody tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    /* Stilizacija gumbov */
+    .btn-success {
+      background-color: #28a745;
+      border-color: #28a745;
+    }
+
+    .btn-success:hover {
+      background-color: #218838;
+      border-color: #1e7e34;
+    }
+
+    /* Določitev širine za vrhunske gumbove */
+    .d-flex {
+      margin-bottom: 20px;
+    }
+
+    /* Dodajanje logotipa v zgornji levi kot */
+    .logo {
+      width: 200px;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container py-5  text-center">
+
+    <img src="https://afiris.eu/logo.png" class="logo mb-4" alt="Logo">
+
+    <!-- Kartica za tabelo pacientov brez shadowa -->
+    <div class="card">
+	
+			<div class="card-header">
+              <div class="row">
+                <div class="col-md-8 text-start">
+                  <h5>Seznam pacientov</h5>
+                </div>
+                <div class="col-md-4 text-end">
+                  <a href="/patients/add" class="btn btn-primary btn-sm">Dodaj pacienta</a>
+                </div>
+              </div>
+            </div>
+			
+			
+      <div class="card-body">
+        <table class="table table-hover m-0">
+          <thead class="table-light">
+            <tr>
+              <th>ID</th>
+              <th>Ime</th>
+              <th>Priimek</th>
+              <th>Starost</th>
+              <th>Spol</th> <!-- Dodan stolpec za spol -->
+              <th>Tip pacienta</th>
+              <th>Akcija</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% patients.forEach(patient => { %>
+              <tr>
+                <td><a href="/patients/<%= patient.id %>"><%= patient.id %></a></td>
+                <td><%= patient.firstName %></td>
+                <td><%= patient.lastName %></td>
+                <td><%= patient.age %></td>
+                <td><%= patient.gender === 'male' ? 'Moški' : 'Ženska' %></td> <!-- Pokaže spol -->
+                <td>
+                  <%= patient.patientType === 'neonatal' ? 'Neonatalni' : 
+                      (patient.patientType === 'pediatric' ? 'Pediatričen' : 'Odrasli') %>
+                </td>
+                <td>
+                  <form action="/patients/delete/<%= patient.id %>" method="POST" style="display:inline;">
+                    <button type="submit" class="btn btn-sm btn-danger">Izbriši</button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

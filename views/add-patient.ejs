@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dodaj pacienta</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .container {
+      max-width: 900px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+    }
+    .card {
+      background-color: #ffffff; /* Bela ozadje kartice */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Rahlo senčenje */
+    }
+    .card-body {
+      padding: 30px;
+    }
+    h1 {
+      color: #2c3e50; /* Temno modra barva za naslov */
+    }
+  </style>
+  <script>
+    function updatePatientType() {
+      const dob = document.getElementById("dob").value;
+      const patientTypeSelect = document.getElementById("patientType");
+
+      if (dob) {
+        const birthDate = new Date(dob);
+        const age = new Date().getFullYear() - birthDate.getFullYear();
+        const patientType = age <= 1 ? "neonatal" : (age <= 6 ? "pediatric" : "adult");
+        
+        // Nastavi tip pacienta glede na starost
+        patientTypeSelect.value = patientType;
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="card-body">
+        <h1 class="text-center mb-4">Dodaj novega pacienta</h1>
+        <form action="/patients/add" method="POST">
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="firstName" class="form-label">Ime</label>
+              <input type="text" class="form-control" id="firstName" name="firstName" required>
+            </div>
+            <div class="col-md-6">
+              <label for="lastName" class="form-label">Priimek</label>
+              <input type="text" class="form-control" id="lastName" name="lastName" required>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="dob" class="form-label">Datum rojstva</label>
+            <input type="date" class="form-control" id="dob" name="dob" required onchange="updatePatientType()">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Spol</label>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" id="genderM" name="gender" value="M" required>
+              <label class="form-check-label" for="genderM">Moški</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" id="genderF" name="gender" value="F" required>
+              <label class="form-check-label" for="genderF">Ženski</label>
+            </div>
+          </div>
+          <!-- Hidden field for patient type, it's automatically set -->
+          <input type="hidden" id="patientType" name="patientType">
+          <div class="d-flex justify-content-between">
+            <button type="submit" class="btn btn-primary">Dodaj pacienta</button>
+            <a href="/patients" class="btn btn-secondary">Nazaj na seznam pacientov</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

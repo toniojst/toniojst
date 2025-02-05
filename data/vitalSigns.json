@@ -1,0 +1,87 @@
+{
+  "10011": [
+    {
+      "date": "2025-02-05",
+      "temperature": 37.5,
+      "systolic": 120,
+      "diastolic": 80,
+      "meanPressure": 93,
+      "heartRate": 75,
+      "respiratoryRate": 16
+    }
+  ],
+  "10013": [
+    {
+      "date": "2025-02-06",
+      "temperature": 37.2,
+      "systolic": 118,
+      "diastolic": 79,
+      "meanPressure": 92,
+      "heartRate": 74,
+      "respiratoryRate": 17
+    },
+    {
+      "date": "2025-02-05",
+      "temperature": 37.5,
+      "systolic": 120,
+      "diastolic": 80,
+      "meanPressure": 93,
+      "heartRate": 80,
+      "respiratoryRate": 16
+    },
+    {
+      "date": "2025-02-05",
+      "temperature": 37.5,
+      "systolic": 120,
+      "diastolic": 80,
+      "meanPressure": 93,
+      "heartRate": 80,
+      "respiratoryRate": 16
+    },
+    {
+      "date": "2025-02-05",
+      "temperature": 37.5,
+      "systolic": 120,
+      "diastolic": 80,
+      "meanPressure": 93,
+      "heartRate": 80,
+      "respiratoryRate": 16
+    },
+    {
+      "date": "2025-02-05",
+      "temperature": 37.5,
+      "systolic": 120,
+      "diastolic": 80,
+      "meanPressure": 93,
+      "heartRate": 80,
+      "respiratoryRate": 16
+    },
+    {
+      "date": "2025-02-05",
+      "temperature": 37.5,
+      "systolic": 120,
+      "diastolic": 80,
+      "meanPressure": 93,
+      "heartRate": 80,
+      "respiratoryRate": 16
+    },
+    {
+      "date": "2025-02-05",
+      "temperature": 37.5,
+      "systolic": 120,
+      "diastolic": 80,
+      "meanPressure": 93,
+      "heartRate": 80,
+      "respiratoryRate": 16
+    },
+    {
+      "date": "2025-02-05",
+      "temperature": 37.5,
+      "systolic": 120,
+      "diastolic": 80,
+      "meanPressure": 93,
+      "heartRate": 80,
+      "respiratoryRate": 16
+    }
+  ]
+}

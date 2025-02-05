@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Podrobnosti o pacientu</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Uvozimo Chart.js -->
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .card {
+      background-color: #ffffff; /* Bela ozadje kartice */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Rahlo senčenje */
+      margin-top: 20px;
+    }
+    .card-body {
+      padding: 30px;
+    }
+    h1 {
+      color: #2c3e50; /* Temno modra barva za naslov */
+    }
+    .header-container {
+      display: flex;
+      justify-content: space-between; /* Razporedi naslov in gumbe na levo in desno */
+      align-items: center; /* Poravnaj vsebino vertikalno */
+    }
+    .btn-container {
+      display: flex;
+      gap: 10px; /* Dodaj razmik med gumbi */
+    }
+    .table td, .table th {
+      vertical-align: middle;
+    }
+    .row-card {
+      display: flex;
+      gap: 20px;
+    }
+    .row-card .col-md-6 {
+      flex: 1;
+    }
+  </style>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+  socket.on('newVitalSign', function(data) {
+  alert(123);
+    if (data.patientId === '<%= patient.id %>') {
+      location.reload(); // Posodobi stran ob novih podatkih
+    }
+  });
+</script>  
+  
+</head>
+<body>
+  <div class="container-fluid">
+
+    <% if (patient) { %> <!-- Preveri, ali pacient obstaja -->
+      <!-- Kartica za podrobnosti o pacientu -->
+      <div class="row-card">
+        <!-- Kartica za graf -->
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header">
+              <div class="row">
+                <div class="col-md-8">
+                  <h5>Podrobnosti o pacientu</h5>
+                </div>
+                <div class="col-md-4 text-end">
+                  <a href="/patients" class="btn btn-secondary btn-sm">Nazaj na seznam pacientov</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-4">
+                  <p><strong>Ime:</strong> <%= patient.firstName %></p>
+                </div>
+                <div class="col-md-4">
+                  <p><strong>Datum rojstva:</strong> <%= patient.dob %></p>
+                </div>
+                <div class="col-md-4">
+                  <p><strong>Spol:</strong> <%= patient.gender === 'male' ? 'Moški' : 'Ženska' %></p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <p><strong>Priimek:</strong> <%= patient.lastName %></p>
+                </div>
+                <div class="col-md-4">
+                  <p><strong>Starost:</strong> <%= patient.age %></p>
+                </div>
+                <div class="col-md-4">
+                  <p><strong>Tip pacienta:</strong> <%= patient.patientType === 'neonatal' ? 'Neonatalni' : patient.patientType === 'pediatric' ? 'Pediatričen' : 'Odrasli' %></p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Kartica za priponke -->
+          <div class="card">
+            <div class="card-header">
+              <h5>Priponke</h5>
+            </div>
+            <div class="card-body">
+              <p>Seznam priponk bo tukaj...</p>
+            </div>
+          </div>
+
+          <!-- Kartica za graf -->
+          <div class="card">
+            <div class="card-header">
+              <h5>Graf vitalnih znakov</h5>
+            </div>
+            <div class="card-body">
+              <canvas id="vitalSignsChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Kartica za tabelo -->
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header">
+              <div class="row">
+                <div class="col-md-8">
+                  <h5>Podatki vitalnih znakov</h5>
+                </div>
+                <div class="col-md-4 text-end">
+			  
+				<button class="btn btn-danger btn-sm" onclick="deleteVitals('<%= patient.id %>')">Pobriši podatke</button>
+<script>
+  function deleteVitals(patientId) {
+    if (confirm("Ali res želite izbrisati vse vitalne znake pacienta?")) {
+      fetch(`/patients/${patientId}/vitals`, { method: 'DELETE' })
+        .then(response => response.json())
+        .then(data => {
+          alert(data.message);
+          location.reload();
+        })
+        .catch(error => console.error('Napaka:', error));
+    }
+  }
+</script>
+  
+				  
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>Datum</th>
+                    <th>Temperatura</th>
+                    <th>Krvni tlak</th>
+                    <th>Srčni utrip</th>
+                    <th>Respiratorna frekvenca</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% vitalSigns.forEach(vital => { %>
+                    <tr>
+                      <td><%= vital.date %></td>
+                      <td><%= vital.temperature %> °C</td>
+                      <td><%= vital.systolic %>/<%= vital.diastolic %> (<%= vital.meanPressure %>) mmHg</td>
+                      <td><%= vital.heartRate %> bpm</td>
+                      <td><%= vital.respiratoryRate %> breaths/min</td>
+                    </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        // Generiraj graf za vitalne znake
+        const ctx = document.getElementById('vitalSignsChart').getContext('2d');
+        const vitalSignsData = {
+          labels: <%- JSON.stringify(vitalSigns.map(vital => vital.date)) %>,  // Datumi
+          datasets: [
+  {
+    label: 'Temperatura (°C)',
+    data: <%- JSON.stringify(vitalSigns.map(vital => vital.temperature)) %>,
+    borderColor: 'rgb(255, 99, 132)',
+    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+    fill: false,
+    tension: 0.1
+  },
+  {
+    label: 'Sistolični tlak (mmHg)',
+    data: <%- JSON.stringify(vitalSigns.map(vital => vital.systolic)) %>,
+    borderColor: 'rgb(54, 162, 235)',
+    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+    fill: false,
+    tension: 0.1
+  },
+  {
+    label: 'Diastolični tlak (mmHg)',
+    data: <%- JSON.stringify(vitalSigns.map(vital => vital.diastolic)) %>,
+    borderColor: 'rgb(75, 192, 192)',
+    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+    fill: false,
+    tension: 0.1
+  },
+  {
+    label: 'Srednji arterijski tlak (mmHg)',
+    data: <%- JSON.stringify(vitalSigns.map(vital => vital.meanPressure)) %>,
+    borderColor: 'rgb(153, 102, 255)',
+    backgroundColor: 'rgba(153, 102, 255, 0.2)',
+    fill: false,
+    tension: 0.1
+  },
+  {
+    label: 'Srčni utrip (bpm)',
+    data: <%- JSON.stringify(vitalSigns.map(vital => vital.heartRate)) %>,
+    borderColor: 'rgb(75, 192, 192)',
+    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+    fill: false,
+    tension: 0.1
+  },
+  {
+    label: 'Respiratorna frekvenca (breaths/min)',
+    data: <%- JSON.stringify(vitalSigns.map(vital => vital.respiratoryRate)) %>,
+    borderColor: 'rgb(153, 102, 255)',
+    backgroundColor: 'rgba(153, 102, 255, 0.2)',
+    fill: false,
+    tension: 0.1
+  }
+]
+        };
+
+        const vitalSignsChart = new Chart(ctx, {
+          type: 'line',
+          data: vitalSignsData,
+          options: {
+            responsive: true,
+            scales: {
+              x: {
+                title: {
+                  display: true,
+                  text: 'Datum'
+                }
+              },
+              y: {
+                title: {
+                  display: true,
+                  text: 'Vrednost'
+                }
+              }
+            }
+          }
+        });
+      </script>
+
+    <% } else { %> <!-- Če pacient ni najden -->
+      <h1 class="text-center">Pacient ni bil najden.</h1>
+      <a href="/patients" class="btn btn-primary">Nazaj na seznam pacientov</a>
+    <% } %>
+  </div>
+</body>
+</html>
